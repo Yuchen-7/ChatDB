@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ChatDB Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h2 {
+            color: #333;
+        }
+        select, input[type="text"], input[type="submit"] {
+            font-size: 16px;
+            padding: 6px;
+            margin: 10px 0;
+        }
+        input[type="text"] {
+            width: 80%;
+        }
+        label {
+            font-weight: bold;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #aaa;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h2>ChatDB Web Demo</h2>
+
+    <form method="post">
+        <div class="section">
+            <label for="db">Select database:</label>
+            <select name="db" id="db">
+                <option value="clinicdb" {% if db == 'clinicdb' %}selected{% endif %}>clinicdb</option>
+                <option value="bankdb" {% if db == 'bankdb' %}selected{% endif %}>bankdb</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <label for="query">Your question:</label><br>
+            <input type="text" id="query" name="query" value="{{ query }}" placeholder="Enter your question here" required>
+            <input type="submit" value="Ask">
+        </div>
+    </form>
+
+    {% if sql %}
+        <div class="section">
+            <p><strong>Generated SQL:</strong></p>
+            <code>{{ sql }}</code>
+        </div>
+    {% endif %}
+
+    {% if result is not none %}
+        <div class="section">
+            <p><strong>Query Result:</strong></p>
+            <table>
+                <tr>
+                    {% for col in result.columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in result.values.tolist() %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+</body>
+</html>
